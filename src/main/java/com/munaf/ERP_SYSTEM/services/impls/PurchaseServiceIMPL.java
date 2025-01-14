@@ -8,7 +8,6 @@ import com.munaf.ERP_SYSTEM.entities.Supplier;
 import com.munaf.ERP_SYSTEM.entities.User;
 import com.munaf.ERP_SYSTEM.exceptions.ResourceNotFound;
 import com.munaf.ERP_SYSTEM.repositories.MasterRepo;
-import com.munaf.ERP_SYSTEM.repositories.PurchaseRepo;
 import com.munaf.ERP_SYSTEM.services.PurchaseService;
 import com.munaf.ERP_SYSTEM.utils.CommonResponse;
 import com.munaf.ERP_SYSTEM.utils.ResponseModel;
@@ -37,6 +36,83 @@ public class PurchaseServiceIMPL implements PurchaseService {
     }
 
     @Override
+    public ResponseModel purchaseProductFromSupplier(Long userId, Long supplierId, List<ProductDTO> productDTOS) {
+        User user = getUserWithId(userId);
+        Supplier supplier = getSupplierWithId(supplierId);
+
+        // saving purchase
+        Purchase purchase = new Purchase();
+        purchase.setUser(user);
+        purchase.setSupplier(supplier);
+        Purchase savedPurchase = masterRepo.getPurchaseRepo().save(purchase);
+
+        List<Product> productsForPurchase = new ArrayList<>();
+        Long totalProductPrice = 0L;
+        Long totalProductStock = 0L;
+
+
+        // saving products
+        List<Product> products = productDTOS.stream()
+                .map(productDTO -> {
+                    Product product = productDTO.productDtoToProduct();
+
+                    Product isProductExist = masterRepo.getProductRepo().findByProductName(product.getProductName());
+                    if (isProductExist != null) {
+                        isProductExist.setProductStock(product.getProductStock() + isProductExist.getProductStock());
+                        Product savedProduct = masterRepo.getProductRepo().save(isProductExist);
+                        productsForPurchase.add(savedProduct); // adding products to purchase
+
+                        // creating a copy product for set prev stock in purchase
+                        Product productCopy = new Product();
+                        productCopy.setProductPrice(savedProduct.getProductPrice());
+                        productCopy.setProductStock(product.getProductStock());
+                        return productCopy;
+                    }
+                    else {
+                        product.setUser(user); //!
+                        product.setPurchase(savedPurchase);//!
+
+                        Product savedProduct = masterRepo.getProductRepo().save(product);
+                        productsForPurchase.add(savedProduct); // adding products to purchase
+                        return savedProduct;
+                    }
+
+                })
+                .toList();
+
+
+
+        for (Product p : products) { // finding total product price and stock
+            totalProductPrice = totalProductPrice + p.getProductPrice();
+            totalProductStock = totalProductStock + p.getProductStock();
+        }
+        purchase.setPurchaseAmount(totalProductPrice);
+        purchase.setPurchaseQuantity(totalProductStock);
+        purchase.setProducts(productsForPurchase);
+
+        Purchase updatedPurchase  = masterRepo.getPurchaseRepo().save(purchase);
+
+        return CommonResponse.OK(PurchaseDTO.purchaseToPurchaseDTO(updatedPurchase));
+
+    }
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+
+@Override
     public ResponseModel purchaseProductFromSupplier(Long userId, Long supplierId, List<ProductDTO> productDTOS) {
         User user = getUserWithId(userId);
         Supplier supplier = getSupplierWithId(supplierId);
@@ -80,5 +156,4 @@ public class PurchaseServiceIMPL implements PurchaseService {
 
     }
 
-
-}
+** */
