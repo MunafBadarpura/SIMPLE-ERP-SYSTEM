@@ -2,6 +2,7 @@ package com.munaf.ERP_SYSTEM.entities;
 
 import com.munaf.ERP_SYSTEM.dtos.Address;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;

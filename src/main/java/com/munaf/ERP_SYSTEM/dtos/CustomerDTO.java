@@ -2,6 +2,7 @@ package com.munaf.ERP_SYSTEM.dtos;
 
 import com.munaf.ERP_SYSTEM.entities.Customer;
 import com.munaf.ERP_SYSTEM.entities.Sale;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 import java.time.LocalDateTime;

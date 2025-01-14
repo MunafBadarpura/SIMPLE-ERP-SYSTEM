@@ -73,27 +73,12 @@ public class CustomerServiceIMPL implements CustomerService {
     @Override
     public ResponseModel updateCustomer(Long userId, Long customerId, CustomerDTO updatedCustomer) {
         User user = getUserWithId(userId);
-//        Customer customer = masterRepo.getCustomerRepo().findById(customerId).orElseThrow(() -> new ResourceNotFound("Customer Not Exists With Id :" + userId));
-
         Customer customer = masterRepo.getCustomerRepo().findByIdAndUserId(customerId, userId).orElseThrow(() -> new ResourceNotFound("Customer Not Exists"));
 
-        if (updatedCustomer.getCustomerName() != null) customer.setCustomerName(updatedCustomer.getCustomerName());
-        if (updatedCustomer.getPhoneNo() != null) customer.setPhoneNo(updatedCustomer.getPhoneNo());
-        if (updatedCustomer.getEmail() != null) customer.setEmail(updatedCustomer.getEmail());
-        if (updatedCustomer.getAddress() != null) {
-            if (updatedCustomer.getAddress().getArea() != null) {
-                customer.getAddress().setArea(updatedCustomer.getAddress().getArea());
-            }
-            if (updatedCustomer.getAddress().getCity() != null) {
-                customer.getAddress().setCity(updatedCustomer.getAddress().getCity());
-            }
-            if (updatedCustomer.getAddress().getState() != null) {
-                customer.getAddress().setState(updatedCustomer.getAddress().getState());
-            }
-            if (updatedCustomer.getAddress().getPinCode() != null) {
-                customer.getAddress().setPinCode(updatedCustomer.getAddress().getPinCode());
-            }
-        }
+        customer.setCustomerName(updatedCustomer.getCustomerName());
+        customer.setPhoneNo(updatedCustomer.getPhoneNo());
+        customer.setEmail(updatedCustomer.getEmail());
+        customer.setAddress(updatedCustomer.getAddress());
 
         // saving customer
         Customer savedCustomer = masterRepo.getCustomerRepo().save(customer);

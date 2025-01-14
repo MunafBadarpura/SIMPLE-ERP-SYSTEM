@@ -1,5 +1,6 @@
 package com.munaf.ERP_SYSTEM.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.munaf.ERP_SYSTEM.entities.enums.Category;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -36,12 +37,17 @@ public class Product {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
 
     @OneToMany(mappedBy = "product")
     private List<Sale> sales;
 
-    @OneToMany(mappedBy = "product")
-    private List<Purchase> purchases;
+//    @ManyToMany(mappedBy = "products")
+//    private List<Purchase> purchases;
 
+    @ManyToOne
+    @JoinColumn(name = "purchase_id")
+    @JsonIgnore
+    private Purchase purchase;
 }

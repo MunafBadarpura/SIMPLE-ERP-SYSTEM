@@ -6,6 +6,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Data
@@ -30,10 +31,15 @@ public class Purchase {
     @JoinColumn(name = "supplier_id")
     private Supplier supplier;
 
-    @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
+//    @ManyToMany
+//    @JoinTable(name = "purchase_product_table",
+//            joinColumns = @JoinColumn(name = "purchase_id"),
+//            inverseJoinColumns = @JoinColumn(name = "product_id")
+//    )
+//    private List<Product> products;
 
+    @OneToMany(mappedBy = "purchase")
+    private List<Product> products;
 
 
 }

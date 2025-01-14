@@ -14,5 +14,9 @@ public class MasterRepo {
     private CustomerRepo customerRepo;
     @Autowired
     private SupplierRepo supplierRepo;
+    @Autowired
+    private PurchaseRepo purchaseRepo;
+    @Autowired
+    private ProductRepo productRepo;
 }
 

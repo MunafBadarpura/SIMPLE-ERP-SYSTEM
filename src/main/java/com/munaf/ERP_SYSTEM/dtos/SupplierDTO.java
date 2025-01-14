@@ -4,10 +4,7 @@ import com.munaf.ERP_SYSTEM.entities.Purchase;
 import com.munaf.ERP_SYSTEM.entities.Sale;
 import com.munaf.ERP_SYSTEM.entities.Supplier;
 import com.munaf.ERP_SYSTEM.entities.User;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -19,6 +16,7 @@ import java.util.List;
 public class SupplierDTO {
 
     private Long id;
+
 
     private String supplierName;
 

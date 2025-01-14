@@ -73,23 +73,10 @@ public class SupplierServiceIMPL implements SupplierService {
         Supplier supplier = masterRepo.getSupplierRepo().findByIdAndUserId(supplierId, userId)
                 .orElseThrow(() -> new ResourceNotFound("Supplier Not Exists"));
 
-        if (updatedSupplier.getSupplierName() != null) supplier.setSupplierName(updatedSupplier.getSupplierName());
-        if (updatedSupplier.getPhoneNo() != null) supplier.setPhoneNo(updatedSupplier.getPhoneNo());
-        if (updatedSupplier.getEmail() != null) supplier.setEmail(updatedSupplier.getEmail());
-        if (updatedSupplier.getAddress() != null) {
-            if (updatedSupplier.getAddress().getArea() != null) {
-                supplier.getAddress().setArea(updatedSupplier.getAddress().getArea());
-            }
-            if (updatedSupplier.getAddress().getCity() != null) {
-                supplier.getAddress().setCity(updatedSupplier.getAddress().getCity());
-            }
-            if (updatedSupplier.getAddress().getState() != null) {
-                supplier.getAddress().setState(updatedSupplier.getAddress().getState());
-            }
-            if (updatedSupplier.getAddress().getPinCode() != null) {
-                supplier.getAddress().setPinCode(updatedSupplier.getAddress().getPinCode());
-            }
-        }
+        supplier.setSupplierName(updatedSupplier.getSupplierName());
+        supplier.setPhoneNo(updatedSupplier.getPhoneNo());
+        supplier.setEmail(updatedSupplier.getEmail());
+        supplier.setAddress(updatedSupplier.getAddress());
 
         // Save supplier
         Supplier savedSupplier = masterRepo.getSupplierRepo().save(supplier);
