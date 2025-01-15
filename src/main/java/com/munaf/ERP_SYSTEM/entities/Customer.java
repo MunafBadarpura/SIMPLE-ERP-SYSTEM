@@ -1,5 +1,6 @@
 package com.munaf.ERP_SYSTEM.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.munaf.ERP_SYSTEM.dtos.Address;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -36,9 +37,11 @@ public class Customer {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
 
     @OneToMany(mappedBy = "customer")
+    @JsonIgnore
     private List<Sale> sales;
 
 }
