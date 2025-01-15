@@ -2,6 +2,7 @@ package com.munaf.ERP_SYSTEM.dtos;
 
 import com.munaf.ERP_SYSTEM.entities.Product;
 import com.munaf.ERP_SYSTEM.entities.Purchase;
+import com.munaf.ERP_SYSTEM.entities.Supplier;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -18,6 +19,8 @@ public class PurchaseDTO {
 
     private LocalDateTime purchaseDate;
 
+    private Supplier supplier;
+
     private List<Product> products;
 
 
@@ -28,6 +31,7 @@ public class PurchaseDTO {
         purchaseDTO.setPurchaseAmount(purchase.getPurchaseAmount());
         purchaseDTO.setPurchaseQuantity(purchase.getPurchaseQuantity());
         purchaseDTO.setPurchaseDate(purchase.getPurchaseDate());
+        purchaseDTO.setSupplier(purchase.getSupplier());
         purchaseDTO.setProducts(purchase.getProducts());
         return purchaseDTO;
     }

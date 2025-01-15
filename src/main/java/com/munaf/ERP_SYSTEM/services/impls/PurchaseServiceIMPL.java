@@ -30,15 +30,15 @@ public class PurchaseServiceIMPL implements PurchaseService {
                 orElseThrow(() -> new ResourceNotFound("User Not Exists With Id :" + userId));
     }
 
-    public Supplier getSupplierWithId(Long supplierId) {
-        return masterRepo.getSupplierRepo().findById(supplierId).
+    public Supplier getSupplierWithId(Long supplierId, Long userId) {
+        return masterRepo.getSupplierRepo().findByIdAndUserId(supplierId, userId).
                 orElseThrow(() -> new ResourceNotFound("Supplier Not Exists With Id :" + supplierId));
     }
 
     @Override
     public ResponseModel purchaseProductFromSupplier(Long userId, Long supplierId, List<ProductDTO> productDTOS) {
         User user = getUserWithId(userId);
-        Supplier supplier = getSupplierWithId(supplierId);
+        Supplier supplier = getSupplierWithId(supplierId, userId);
 
         // saving purchase
         Purchase purchase = new Purchase();
@@ -56,7 +56,7 @@ public class PurchaseServiceIMPL implements PurchaseService {
                 .map(productDTO -> {
                     Product product = productDTO.productDtoToProduct();
 
-                    Product isProductExist = masterRepo.getProductRepo().findByProductName(product.getProductName());
+                    Product isProductExist = masterRepo.getProductRepo().findByProductNameAndUserId(product.getProductName(), user.getId());
                     if (isProductExist != null) {
                         isProductExist.setProductStock(product.getProductStock() + isProductExist.getProductStock());
                         Product savedProduct = masterRepo.getProductRepo().save(isProductExist);
@@ -70,7 +70,7 @@ public class PurchaseServiceIMPL implements PurchaseService {
                     }
                     else {
                         product.setUser(user); //!
-                        product.setPurchase(savedPurchase);//!
+                        product.getPurchases().add(savedPurchase);//!
 
                         Product savedProduct = masterRepo.getProductRepo().save(product);
                         productsForPurchase.add(savedProduct); // adding products to purchase
@@ -94,6 +94,28 @@ public class PurchaseServiceIMPL implements PurchaseService {
 
         return CommonResponse.OK(PurchaseDTO.purchaseToPurchaseDTO(updatedPurchase));
 
+    }
+
+
+
+    @Override
+    public ResponseModel getAllPurchases(Long userId) {
+        User user = getUserWithId(userId);
+        List<Purchase> purchases = masterRepo.getPurchaseRepo().findByUserId(userId);
+        List<PurchaseDTO> purchaseDTOS = purchases.stream()
+                .map(purchase -> PurchaseDTO.purchaseToPurchaseDTO(purchase))
+                .toList();
+
+        return CommonResponse.OK(purchaseDTOS);
+    }
+
+    @Override
+    public ResponseModel getPurchaseWithId(Long userId, Long purchaseId) {
+        User user = getUserWithId(userId);
+        Purchase purchase = masterRepo.getPurchaseRepo().findByIdAndUserId(purchaseId,userId)
+                .orElseThrow(() -> new ResourceNotFound("Purchase Not Found With Id : " + purchaseId));
+
+        return CommonResponse.OK(PurchaseDTO.purchaseToPurchaseDTO(purchase));
     }
 
 

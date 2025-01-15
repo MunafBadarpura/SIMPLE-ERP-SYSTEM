@@ -18,8 +18,21 @@ public class PurchaseController {
     }
 
     @PostMapping("supplier/{supplierId}")
-    ResponseModel purchaseProductFromSupplier(@PathVariable Long userId,@PathVariable Long supplierId, @RequestBody List<ProductDTO> productDTOS) {
+    public ResponseModel purchaseProductFromSupplier(@PathVariable Long userId,@PathVariable Long supplierId, @RequestBody List<ProductDTO> productDTOS) {
         return purchaseService.purchaseProductFromSupplier(userId, supplierId, productDTOS);
+    }
+
+
+    // GET ALL PURCHASES
+    @GetMapping
+    public ResponseModel getAllPurchases(@PathVariable Long userId) {
+        return purchaseService.getAllPurchases(userId);
+    }
+
+    // GET PURCHASE WITH ID
+    @GetMapping("/{purchaseId}")
+    public ResponseModel getPurchaseWithId(@PathVariable Long userId, @PathVariable Long purchaseId) {
+        return purchaseService.getPurchaseWithId(userId, purchaseId);
     }
 
 }

@@ -11,4 +11,7 @@ public interface PurchaseService {
 
     ResponseModel purchaseProductFromSupplier(Long userId, Long supplierId, @RequestBody List<ProductDTO> productDTOS);
 
+    ResponseModel getAllPurchases(Long userId);
+
+    ResponseModel getPurchaseWithId(Long userId, Long purchaseId);
 }

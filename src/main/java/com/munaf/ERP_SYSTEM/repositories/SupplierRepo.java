@@ -15,7 +15,7 @@ public interface SupplierRepo extends JpaRepository<Supplier, Long> {
     Boolean existsByEmailAndUserId(String email, Long userId);
     Boolean existsByPhoneNoAndUserId(String phoneNo, Long userId);
 
-    Optional<Supplier> findByIdAndUserId(Long customerId, Long userId);
+    Optional<Supplier> findByIdAndUserId(Long supplierId, Long userId);
 
     List<Supplier> findAllByUserId(Long supplierId);
 

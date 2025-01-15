@@ -30,7 +30,7 @@ public class SupplierDTO {
 
     private LocalDateTime updatedAt;
 
-    private List<Purchase> purchases;
+//    private List<Purchase> purchases;
 
     // Convert SupplierDTO to Supplier entity
     public Supplier supplierDtoToSupplier() {
@@ -52,7 +52,7 @@ public class SupplierDTO {
         supplierDTO.setPhoneNo(supplier.getPhoneNo());
         supplierDTO.setCreatedAt(supplier.getCreatedAt());
         supplierDTO.setUpdatedAt(supplier.getUpdatedAt());
-        supplierDTO.setPurchases(supplier.getPurchases());
+//        supplierDTO.setPurchases(supplier.getPurchases());
         return supplierDTO;
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -40,14 +41,16 @@ public class Product {
     @JsonIgnore
     private User user;
 
-    @OneToMany(mappedBy = "product")
-    private List<Sale> sales;
-
-//    @ManyToMany(mappedBy = "products")
-//    private List<Purchase> purchases;
-
-    @ManyToOne
-    @JoinColumn(name = "purchase_id")
+    @ManyToMany(mappedBy = "products")
     @JsonIgnore
-    private Purchase purchase;
+    private List<Sale> sales = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "products")
+    @JsonIgnore
+    private List<Purchase> purchases = new ArrayList<>();
+
+//    @ManyToOne
+//    @JoinColumn(name = "purchase_id")
+//    @JsonIgnore
+//    private Purchase purchase;
 }

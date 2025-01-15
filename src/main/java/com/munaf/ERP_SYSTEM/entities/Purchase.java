@@ -31,15 +31,15 @@ public class Purchase {
     @JoinColumn(name = "supplier_id")
     private Supplier supplier;
 
-//    @ManyToMany
-//    @JoinTable(name = "purchase_product_table",
-//            joinColumns = @JoinColumn(name = "purchase_id"),
-//            inverseJoinColumns = @JoinColumn(name = "product_id")
-//    )
-//    private List<Product> products;
-
-    @OneToMany(mappedBy = "purchase")
+    @ManyToMany
+    @JoinTable(name = "purchase_product_table",
+            joinColumns = @JoinColumn(name = "purchase_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
+    )
     private List<Product> products;
+
+//    @OneToMany(mappedBy = "purchase")
+//    private List<Product> products;
 
 
 }
