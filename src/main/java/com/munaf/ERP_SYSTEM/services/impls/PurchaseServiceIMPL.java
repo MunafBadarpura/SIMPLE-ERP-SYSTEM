@@ -18,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -28,9 +29,12 @@ import java.util.List;
 public class PurchaseServiceIMPL implements PurchaseService {
 
     private final MasterRepo masterRepo;
+    private final AccountServiceIMPL accountServiceIMPL;
 
-    public PurchaseServiceIMPL(MasterRepo masterRepo) {
+
+    public PurchaseServiceIMPL(MasterRepo masterRepo, AccountServiceIMPL accountServiceIMPL) {
         this.masterRepo = masterRepo;
+        this.accountServiceIMPL = accountServiceIMPL;
     }
 
     public User getUserWithId(Long userId) {
@@ -44,11 +48,12 @@ public class PurchaseServiceIMPL implements PurchaseService {
     }
 
     @Override
+    @Transactional
     public ResponseModel purchaseProductFromSupplier(Long userId, Long supplierId, List<ProductDTO> productDTOS) {
         User user = getUserWithId(userId);
         Supplier supplier = getSupplierWithId(supplierId, userId);
 
-        Long totalProductPrice = 0L;
+        Long totalPurchasePrice = 0L;
         List<Product> products = new ArrayList<>();
 
         for (ProductDTO productDTO : productDTOS) {
@@ -70,15 +75,18 @@ public class PurchaseServiceIMPL implements PurchaseService {
             }
 
             // Update total price
-            totalProductPrice += productDTO.getProductPrice();
+            totalPurchasePrice += productDTO.getProductPrice()*productDTO.getProductStock();
         }
+
+        // updating bank account
+        accountServiceIMPL.withdrawFromAccount(userId, totalPurchasePrice);
 
         // Create a new purchase
         Purchase purchase = new Purchase();
         purchase.setUser(user);
         purchase.setSupplier(supplier);
         purchase.setProducts(products);
-        purchase.setPurchaseAmount(totalProductPrice);
+        purchase.setPurchaseAmount(totalPurchasePrice);
         purchase.setPurchaseQuantity((long) products.size());
 
         // Save the purchase

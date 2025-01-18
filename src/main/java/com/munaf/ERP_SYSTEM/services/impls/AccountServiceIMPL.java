@@ -56,7 +56,7 @@ public class AccountServiceIMPL implements AccountService {
         Account userAccount = user.getAccount();
 
         if (userAccount.getAccountBalance() < withdrawAmount) {
-            throw new InvalidInputException("withdrawAmount is higher than account balance, accountBalance : "+ userAccount.getAccountBalance());
+            throw new InvalidInputException("Insufficient Account Balance, Your AC BALANCE : "+ userAccount.getAccountBalance());
         }
         userAccount.setAccountBalance(userAccount.getAccountBalance() - withdrawAmount);
         Account updatedUserAccount = masterRepo.getAccountRepo().save(userAccount);

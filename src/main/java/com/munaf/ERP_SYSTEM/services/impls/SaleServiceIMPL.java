@@ -29,9 +29,11 @@ import java.util.List;
 public class SaleServiceIMPL implements SaleService {
 
     private final MasterRepo masterRepo;
+    private final AccountServiceIMPL accountServiceIMPL;
 
-    public SaleServiceIMPL(MasterRepo masterRepo) {
+    public SaleServiceIMPL(MasterRepo masterRepo, AccountServiceIMPL accountServiceIMPL) {
         this.masterRepo = masterRepo;
+        this.accountServiceIMPL = accountServiceIMPL;
     }
 
     public User getUserWithId(Long userId) {
@@ -50,6 +52,7 @@ public class SaleServiceIMPL implements SaleService {
     }
 
     @Override
+    @Transactional
     public ResponseModel saleProductToCustomer(Long userId, Long customerId, List<SaleProductDTO> saleProductDTOS) {
         User user = getUserWithId(userId);
         Customer customer = getCustomerWithId(customerId);
@@ -64,11 +67,15 @@ public class SaleServiceIMPL implements SaleService {
         for (SaleProductDTO saleProductDTO : saleProductDTOS) {
             Product product = getProductWithId(saleProductDTO.getId(), userId);
 
-            totalSaleAmount += product.getProductPrice();
+            totalSaleAmount += product.getProductPrice()*saleProductDTO.getProductQuantity();
             products.add(product);
             product.setProductStock(product.getProductStock() - saleProductDTO.getProductQuantity());
             masterRepo.getProductRepo().save(product);
         }
+
+        // updating bank account
+        accountServiceIMPL.depositToAccount(userId, totalSaleAmount);
+
 
         // creating a sale entry
         Sale sale = new Sale();

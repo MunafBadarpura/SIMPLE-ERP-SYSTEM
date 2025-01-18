@@ -7,6 +7,7 @@ import com.munaf.ERP_SYSTEM.services.TransactionService;
 import com.munaf.ERP_SYSTEM.utils.CommonResponse;
 import com.munaf.ERP_SYSTEM.utils.ResponseModel;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -22,6 +23,7 @@ public class TransactionServiceIMPL implements TransactionService {
     }
 
     @Override
+    @Transactional
     public ResponseModel getTransactions(Long userId, LocalDate dateFrom, LocalDate dateTo) {
         List<Transaction> transactions;
 
