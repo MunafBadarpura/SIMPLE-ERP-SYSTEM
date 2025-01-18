@@ -1,6 +1,8 @@
 package com.munaf.ERP_SYSTEM.repositories;
 
 import com.munaf.ERP_SYSTEM.entities.Customer;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -16,4 +18,5 @@ public interface CustomerRepo extends JpaRepository<Customer, Long> {
     Optional<Customer> findByIdAndUserId(Long customerId, Long userId);
 
     List<Customer> findAllByUserId(Long userId);
+    Page<Customer> findAllByUserId(Long userId, Pageable pageable);
 }

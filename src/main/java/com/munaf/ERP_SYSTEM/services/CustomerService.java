@@ -1,6 +1,7 @@
 package com.munaf.ERP_SYSTEM.services;
 
 import com.munaf.ERP_SYSTEM.dtos.CustomerDTO;
+import com.munaf.ERP_SYSTEM.utils.PageResponseModel;
 import com.munaf.ERP_SYSTEM.utils.ResponseModel;
 
 public interface CustomerService {
@@ -8,7 +9,7 @@ public interface CustomerService {
 
     ResponseModel getCustomerById(Long userId, Long customerId);
 
-    ResponseModel getAllCustomer(Long userId);
+    PageResponseModel getAllCustomer(Long userId, Integer pageNo, String sortBy);
 
     ResponseModel createCustomer(Long userId, CustomerDTO customerDTO);
 

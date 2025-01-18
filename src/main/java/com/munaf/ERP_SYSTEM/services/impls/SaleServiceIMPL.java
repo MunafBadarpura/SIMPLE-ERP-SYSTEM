@@ -10,11 +10,19 @@ import com.munaf.ERP_SYSTEM.entities.User;
 import com.munaf.ERP_SYSTEM.exceptions.ResourceNotFound;
 import com.munaf.ERP_SYSTEM.repositories.MasterRepo;
 import com.munaf.ERP_SYSTEM.services.SaleService;
+import com.munaf.ERP_SYSTEM.utils.CommonPageResponse;
 import com.munaf.ERP_SYSTEM.utils.CommonResponse;
+import com.munaf.ERP_SYSTEM.utils.PageResponseModel;
 import com.munaf.ERP_SYSTEM.utils.ResponseModel;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -77,15 +85,23 @@ public class SaleServiceIMPL implements SaleService {
 
 
     @Override
-    public ResponseModel getAllSales(Long userId) {
+    public PageResponseModel getAllSales(Long userId, Integer pageNo, String sortBy) {
         User user = getUserWithId(userId);
-        List<Sale> sales = masterRepo.getSaleRepo().findByUserId(userId);
-        List<SaleDTO> saleDTOS = sales.stream()
-                .map(sale -> SaleDTO.SaleToSaleDto(sale))
+        Pageable pageable = PageRequest.of(pageNo - 1, 10, Sort.by(sortBy));
+        Page<Sale> sales = masterRepo.getSaleRepo().findByUserId(userId, pageable);
+        List<SaleDTO> saleDTOS = sales.getContent()
+                .stream()
+                .map(SaleDTO::SaleToSaleDto)
                 .toList();
 
-        return CommonResponse.OK(sales);
+        HashMap<String, Object> pageResult = new HashMap<>();
+        pageResult.put("currentPage", pageNo);
+        pageResult.put("totalPage", sales.getTotalPages());
+        pageResult.put("totalRecords", sales.getTotalElements());
+
+        return CommonPageResponse.OK(saleDTOS, pageResult);
     }
+
 
     @Override
     public ResponseModel getSaleById(Long userId, Long saleId) {

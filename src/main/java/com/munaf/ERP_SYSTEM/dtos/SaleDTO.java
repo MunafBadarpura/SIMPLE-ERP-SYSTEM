@@ -4,6 +4,7 @@ import com.munaf.ERP_SYSTEM.entities.Customer;
 import com.munaf.ERP_SYSTEM.entities.Product;
 import com.munaf.ERP_SYSTEM.entities.Sale;
 import com.munaf.ERP_SYSTEM.entities.User;
+import jakarta.validation.constraints.Positive;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -20,7 +21,7 @@ public class SaleDTO {
 
     private LocalDateTime saleDate;
 
-    private Customer customer;
+    private Long customerId;
 
     private List<Product> products;
 
@@ -30,7 +31,7 @@ public class SaleDTO {
         saleDTO.setSaleAmount(sale.getSaleAmount());
         saleDTO.setSaleQuantity(sale.getSaleQuantity());
         saleDTO.setSaleDate(sale.getSaleDate());
-        saleDTO.setCustomer(sale.getCustomer());
+        saleDTO.setCustomerId(sale.getCustomer().getId());
         saleDTO.setProducts(sale.getProducts());
         return saleDTO;
     }

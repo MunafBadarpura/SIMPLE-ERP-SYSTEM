@@ -7,10 +7,17 @@ import com.munaf.ERP_SYSTEM.exceptions.ResourceAlreadyExists;
 import com.munaf.ERP_SYSTEM.exceptions.ResourceNotFound;
 import com.munaf.ERP_SYSTEM.repositories.MasterRepo;
 import com.munaf.ERP_SYSTEM.services.SupplierService;
+import com.munaf.ERP_SYSTEM.utils.CommonPageResponse;
 import com.munaf.ERP_SYSTEM.utils.CommonResponse;
+import com.munaf.ERP_SYSTEM.utils.PageResponseModel;
 import com.munaf.ERP_SYSTEM.utils.ResponseModel;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -36,14 +43,23 @@ public class SupplierServiceIMPL implements SupplierService {
     }
 
     @Override
-    public ResponseModel getAllSuppliers(Long userId) {
+    public PageResponseModel getAllSuppliers(Long userId, Integer pageNo, String sortBy) {
         User user = getUserWithId(userId);
-        List<Supplier> suppliers = masterRepo.getSupplierRepo().findAllByUserId(userId);
-        List<SupplierDTO> supplierDTOS = suppliers.stream()
+        Pageable pageable = PageRequest.of(pageNo - 1, 10, Sort.by(sortBy));
+        Page<Supplier> suppliers = masterRepo.getSupplierRepo().findAllByUserId(userId, pageable);
+        List<SupplierDTO> supplierDTOS = suppliers.getContent()
+                .stream()
                 .map(SupplierDTO::supplierToSupplierDto)
                 .toList();
-        return CommonResponse.OK(supplierDTOS);
+
+        HashMap<String, Object> pageResult = new HashMap<>();
+        pageResult.put("currentPage", pageNo);
+        pageResult.put("totalPage", suppliers.getTotalPages());
+        pageResult.put("totalRecords", suppliers.getTotalElements());
+
+        return CommonPageResponse.OK(supplierDTOS, pageResult);
     }
+
 
     @Override
     public ResponseModel createSupplier(Long userId, SupplierDTO supplierDTO) {

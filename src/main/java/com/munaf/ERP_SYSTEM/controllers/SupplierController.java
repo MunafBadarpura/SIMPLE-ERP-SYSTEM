@@ -2,7 +2,9 @@ package com.munaf.ERP_SYSTEM.controllers;
 
 import com.munaf.ERP_SYSTEM.dtos.SupplierDTO;
 import com.munaf.ERP_SYSTEM.services.SupplierService;
+import com.munaf.ERP_SYSTEM.utils.PageResponseModel;
 import com.munaf.ERP_SYSTEM.utils.ResponseModel;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,19 +25,21 @@ public class SupplierController {
 
     // Get all suppliers
     @GetMapping
-    public ResponseModel getAllSuppliers(@PathVariable Long userId) {
-        return supplierService.getAllSuppliers(userId);
+    public PageResponseModel getAllSuppliers(@PathVariable Long userId,
+                                             @RequestParam(defaultValue = "1") Integer pageNo,
+                                             @RequestParam(defaultValue = "id") String sortBy) {
+        return supplierService.getAllSuppliers(userId,pageNo,sortBy);
     }
 
     // Create a new supplier
     @PostMapping
-    public ResponseModel createSupplier(@PathVariable Long userId, @RequestBody SupplierDTO supplierDTO) {
+    public ResponseModel createSupplier(@PathVariable Long userId, @RequestBody @Valid SupplierDTO supplierDTO) {
         return supplierService.createSupplier(userId, supplierDTO);
     }
 
     // Update supplier
     @PutMapping("/{supplierId}")
-    public ResponseModel updateSupplier(@PathVariable Long userId, @PathVariable Long supplierId, @RequestBody SupplierDTO supplierDTO) {
+    public ResponseModel updateSupplier(@PathVariable Long userId, @PathVariable Long supplierId, @RequestBody @Valid SupplierDTO supplierDTO) {
         return supplierService.updateSupplier(userId, supplierId, supplierDTO);
     }
 

@@ -7,12 +7,19 @@ import com.munaf.ERP_SYSTEM.exceptions.ResourceAlreadyExists;
 import com.munaf.ERP_SYSTEM.exceptions.ResourceNotFound;
 import com.munaf.ERP_SYSTEM.repositories.MasterRepo;
 import com.munaf.ERP_SYSTEM.services.CustomerService;
+import com.munaf.ERP_SYSTEM.utils.CommonPageResponse;
 import com.munaf.ERP_SYSTEM.utils.CommonResponse;
+import com.munaf.ERP_SYSTEM.utils.PageResponseModel;
 import com.munaf.ERP_SYSTEM.utils.ResponseModel;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Pageable;
 
+import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
 public class CustomerServiceIMPL implements CustomerService {
@@ -36,15 +43,23 @@ public class CustomerServiceIMPL implements CustomerService {
     }
 
     @Override
-    public ResponseModel getAllCustomer(Long userId) {
+    public PageResponseModel getAllCustomer(Long userId, Integer pageNo, String sortBy) {
         User user = getUserWithId(userId);
-        List<Customer> customers = masterRepo.getCustomerRepo().findAllByUserId(userId);
-        List<CustomerDTO> customerDTOS = customers
+        Pageable pageable = PageRequest.of(pageNo-1,10, Sort.by(sortBy));
+
+        Page<Customer> customers = masterRepo.getCustomerRepo().findAllByUserId(userId, pageable);
+
+        List<CustomerDTO> customerDTOS = customers.getContent()
                 .stream()
                 .map(customer -> CustomerDTO.customerToCustomerDto(customer))
                 .toList();
 
-        return CommonResponse.OK(customerDTOS);
+        HashMap<String, Object> pageResult = new HashMap<>();
+        pageResult.put("currentPage", pageNo);
+        pageResult.put("totalPage", customers.getTotalPages());
+        pageResult.put("totalRecords", customers.getTotalElements());
+
+        return CommonPageResponse.OK(customerDTOS,pageResult);
 
     }
 

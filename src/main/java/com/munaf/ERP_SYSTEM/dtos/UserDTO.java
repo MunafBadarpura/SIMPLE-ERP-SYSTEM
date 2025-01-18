@@ -1,10 +1,12 @@
 package com.munaf.ERP_SYSTEM.dtos;
 
+import com.munaf.ERP_SYSTEM.entities.Account;
 import com.munaf.ERP_SYSTEM.entities.User;
 import jakarta.persistence.Embedded;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
@@ -15,19 +17,25 @@ public class UserDTO {
 
     private Long id;
 
-    @NotBlank(message = "username can not be blank")
-    @Size(min = 3, max = 10, message = "username can be in the range of 3 to 10")
+    // account
+    private Long accountId;
+
+    @NotBlank(message = "Username cannot be blank.")
+    @Size(min = 3, max = 10, message = "Username must be between 3 and 10 characters.")
     private String username;
 
-    @NotBlank(message = "phoneNo can not be blank")
+    @NotBlank(message = "Phone number cannot be blank.")
+    @Pattern(regexp = "^[0-9]{10}$", message = "Phone number must be 10 digits.")
     private String phoneNo;
 
-    @Email(message = "email not valid")
+    @NotBlank(message = "Email cannot be blank.")
+    @Email(message = "Please provide a valid email address.")
     private String email;
 
-    @NotBlank(message = "password can not be blank")
-    @Size(min = 5, max = 15, message = "password can be in the range of 5 to 15")
+    @NotBlank(message = "Password cannot be blank.")
+    @Size(min = 5, max = 15, message = "Password must be between 5 and 15 characters.")
     private String password;
+
 
     @Embedded
     @Valid
@@ -36,6 +44,8 @@ public class UserDTO {
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
+
+
 
 
 
@@ -60,6 +70,7 @@ public class UserDTO {
         userDTO.setAddress(user.getAddress());
         userDTO.setCreatedAt(user.getCreatedAt());
         userDTO.setUpdatedAt(user.getUpdatedAt());
+        userDTO.setAccountId(user.getAccount().getId());
 
         return userDTO;
     }

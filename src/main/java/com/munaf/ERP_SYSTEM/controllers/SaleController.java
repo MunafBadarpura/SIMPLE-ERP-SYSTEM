@@ -1,15 +1,18 @@
 package com.munaf.ERP_SYSTEM.controllers;
 
-import com.munaf.ERP_SYSTEM.dtos.ProductDTO;
 import com.munaf.ERP_SYSTEM.dtos.SaleProductDTO;
 import com.munaf.ERP_SYSTEM.services.SaleService;
+import com.munaf.ERP_SYSTEM.utils.PageResponseModel;
 import com.munaf.ERP_SYSTEM.utils.ResponseModel;
+import jakarta.validation.Valid;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("user/{userId}/sale")
+@Validated
 public class SaleController {
 
     private final SaleService saleService;
@@ -19,14 +22,16 @@ public class SaleController {
     }
 
     @PostMapping("/customer/{customerId}")
-    public ResponseModel saleProductToCustomer(@PathVariable Long userId, @PathVariable Long customerId, @RequestBody List<SaleProductDTO> saleProductDTOS) {
+    public ResponseModel saleProductToCustomer(@PathVariable Long userId, @PathVariable Long customerId, @RequestBody @Valid List< SaleProductDTO> saleProductDTOS) {
         return saleService.saleProductToCustomer(userId, customerId, saleProductDTOS);
     }
 
 
     @GetMapping
-    public ResponseModel getAllSales(@PathVariable Long userId) {
-        return saleService.getAllSales(userId);
+    public PageResponseModel getAllSales(@PathVariable Long userId,
+                                         @RequestParam(defaultValue = "1") Integer pageNo,
+                                         @RequestParam(defaultValue = "id") String sortBy) {
+        return saleService.getAllSales(userId, pageNo, sortBy);
     }
 
     @GetMapping("/{saleId}")

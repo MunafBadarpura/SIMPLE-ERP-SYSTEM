@@ -16,7 +16,7 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long accountBalance;
+    private Long accountBalance = 0L;
 
     @LastModifiedDate
     private LocalDateTime lastUpdated;

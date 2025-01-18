@@ -20,5 +20,9 @@ public class MasterRepo {
     private ProductRepo productRepo;
     @Autowired
     private SaleRepo saleRepo;
+    @Autowired
+    private AccountRepo accountRepo;
+    @Autowired
+    private TransactionRepo transactionRepo;
 }
 

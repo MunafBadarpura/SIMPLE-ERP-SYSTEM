@@ -6,10 +6,17 @@ import com.munaf.ERP_SYSTEM.entities.User;
 import com.munaf.ERP_SYSTEM.exceptions.ResourceNotFound;
 import com.munaf.ERP_SYSTEM.repositories.MasterRepo;
 import com.munaf.ERP_SYSTEM.services.ProductService;
+import com.munaf.ERP_SYSTEM.utils.CommonPageResponse;
 import com.munaf.ERP_SYSTEM.utils.CommonResponse;
+import com.munaf.ERP_SYSTEM.utils.PageResponseModel;
 import com.munaf.ERP_SYSTEM.utils.ResponseModel;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,14 +35,23 @@ public class ProductServiceIMPL implements ProductService {
     }
 
     @Override
-    public ResponseModel getAllProducts(Long userId) {
+    public PageResponseModel getAllProducts(Long userId, Integer pageNo, String sortBy) {
         isUserExistWithId(userId);
-        List<Product> products = masterRepo.getProductRepo().findByUserId(userId);
-        List<ProductDTO> productDTOS = products.stream()
+
+
+        Pageable pageable = PageRequest.of(pageNo-1, 10, Sort.by(sortBy));
+        Page<Product> products = masterRepo.getProductRepo().findByUserId(userId, pageable);
+
+        List<ProductDTO> productDTOS = products.getContent().stream()
                 .map(product -> ProductDTO.productToProductDto(product))
                 .toList();
 
-        return CommonResponse.OK(productDTOS);
+        HashMap<String, Object> pageResult = new HashMap<>();
+        pageResult.put("currentPage", pageNo);
+        pageResult.put("totalPage", products.getTotalPages());
+        pageResult.put("totalRecords", products.getTotalElements());
+
+        return CommonPageResponse.OK(productDTOS,pageResult);
     }
 
     @Override

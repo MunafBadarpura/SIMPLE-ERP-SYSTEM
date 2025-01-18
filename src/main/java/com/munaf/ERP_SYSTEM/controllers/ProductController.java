@@ -1,11 +1,9 @@
 package com.munaf.ERP_SYSTEM.controllers;
 
 import com.munaf.ERP_SYSTEM.services.ProductService;
+import com.munaf.ERP_SYSTEM.utils.PageResponseModel;
 import com.munaf.ERP_SYSTEM.utils.ResponseModel;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("user/{userId}/product")
@@ -19,8 +17,10 @@ public class ProductController {
 
     // GET ALL PRODUCTS
     @GetMapping
-    public ResponseModel getAllProducts(@PathVariable Long userId) {
-        return productService.getAllProducts(userId);
+    public PageResponseModel getAllProducts(@PathVariable Long userId,
+                                            @RequestParam(defaultValue = "1") Integer pageNo,
+                                            @RequestParam(defaultValue = "id") String sortBy) {
+        return productService.getAllProducts(userId,pageNo,sortBy);
     }
 
     // GET PRODUCT BY ID

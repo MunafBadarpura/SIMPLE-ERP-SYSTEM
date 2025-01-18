@@ -1,5 +1,6 @@
 package com.munaf.ERP_SYSTEM.entities.enums;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -17,5 +18,6 @@ public enum Category {
     Category(String category) {
         this.category = category;
     }
+
 
 }

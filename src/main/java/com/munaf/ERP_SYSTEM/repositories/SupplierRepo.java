@@ -2,6 +2,8 @@ package com.munaf.ERP_SYSTEM.repositories;
 
 import com.munaf.ERP_SYSTEM.entities.Customer;
 import com.munaf.ERP_SYSTEM.entities.Supplier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -17,6 +19,6 @@ public interface SupplierRepo extends JpaRepository<Supplier, Long> {
 
     Optional<Supplier> findByIdAndUserId(Long supplierId, Long userId);
 
-    List<Supplier> findAllByUserId(Long supplierId);
+    Page<Supplier> findAllByUserId(Long supplierId, Pageable pageable);
 
 }

@@ -9,12 +9,19 @@ import com.munaf.ERP_SYSTEM.entities.User;
 import com.munaf.ERP_SYSTEM.exceptions.ResourceNotFound;
 import com.munaf.ERP_SYSTEM.repositories.MasterRepo;
 import com.munaf.ERP_SYSTEM.services.PurchaseService;
+import com.munaf.ERP_SYSTEM.utils.CommonPageResponse;
 import com.munaf.ERP_SYSTEM.utils.CommonResponse;
+import com.munaf.ERP_SYSTEM.utils.PageResponseModel;
 import com.munaf.ERP_SYSTEM.utils.ResponseModel;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -77,28 +84,37 @@ public class PurchaseServiceIMPL implements PurchaseService {
         // Save the purchase
         Purchase savedPurchase = masterRepo.getPurchaseRepo().save(purchase);
 
-        // Update the Many-to-Many relationship (inverse side)
-        for (Product product : products) {
-            product.getPurchases().add(savedPurchase);
-            masterRepo.getProductRepo().save(product); // Save changes to maintain the relationship
-        }
+        // Update the Many-to-Many relationship (inverse side) // for unidirectional you can ignore this
+//        for (Product product : products) {
+//            product.getPurchases().add(savedPurchase);
+//            masterRepo.getProductRepo().save(product); // Save changes to maintain the relationship
+//        }
 
         return CommonResponse.OK(PurchaseDTO.purchaseToPurchaseDTO(savedPurchase));
     }
 
 
-
-
     @Override
-    public ResponseModel getAllPurchases(Long userId) {
+    public PageResponseModel getAllPurchases(Long userId, Integer pageNo, String sortBy) {
         User user = getUserWithId(userId);
-        List<Purchase> purchases = masterRepo.getPurchaseRepo().findByUserId(userId);
-        List<PurchaseDTO> purchaseDTOS = purchases.stream()
+
+        Pageable pageable = PageRequest.of(pageNo - 1, 10, Sort.by(sortBy));
+
+        Page<Purchase> purchases = masterRepo.getPurchaseRepo().findByUserId(userId, pageable);
+
+        List<PurchaseDTO> purchaseDTOS = purchases.getContent()
+                .stream()
                 .map(purchase -> PurchaseDTO.purchaseToPurchaseDTO(purchase))
                 .toList();
 
-        return CommonResponse.OK(purchaseDTOS);
+        HashMap<String, Object> pageResult = new HashMap<>();
+        pageResult.put("currentPage", pageNo);
+        pageResult.put("totalPage", purchases.getTotalPages());
+        pageResult.put("totalRecords", purchases.getTotalElements());
+
+        return CommonPageResponse.OK(purchaseDTOS, pageResult);
     }
+
 
     @Override
     public ResponseModel getPurchaseWithId(Long userId, Long purchaseId) {

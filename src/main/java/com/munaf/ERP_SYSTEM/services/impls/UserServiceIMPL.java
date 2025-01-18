@@ -1,43 +1,54 @@
 package com.munaf.ERP_SYSTEM.services.impls;
 
 import com.munaf.ERP_SYSTEM.dtos.UserDTO;
+import com.munaf.ERP_SYSTEM.entities.Account;
 import com.munaf.ERP_SYSTEM.entities.User;
 import com.munaf.ERP_SYSTEM.exceptions.InvalidInputException;
 import com.munaf.ERP_SYSTEM.exceptions.ResourceAlreadyExists;
 import com.munaf.ERP_SYSTEM.exceptions.ResourceNotFound;
-import com.munaf.ERP_SYSTEM.repositories.UserRepo;
+import com.munaf.ERP_SYSTEM.repositories.MasterRepo;
 import com.munaf.ERP_SYSTEM.services.UserService;
 import com.munaf.ERP_SYSTEM.utils.CommonResponse;
 import com.munaf.ERP_SYSTEM.utils.ResponseModel;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Service
 public class UserServiceIMPL implements UserService {
 
-    private final UserRepo userRepo;
+    private final MasterRepo masterRepo;
 
-    public UserServiceIMPL(UserRepo userRepo) {
-        this.userRepo = userRepo;
+    public UserServiceIMPL(MasterRepo masterRepo) {
+        this.masterRepo = masterRepo;
     }
 
     @Override
+    @Transactional
     public ResponseModel signupUser(UserDTO userDTO) {
         User user = userDTO.UserDtoToUser();
 
-        Boolean isUserAlreadyExist = userRepo.existsByEmailOrPhoneNo(user.getEmail(), user.getPhoneNo());
+        Boolean isUserAlreadyExist = masterRepo.getUserRepo().existsByEmailOrPhoneNo(user.getEmail(), user.getPhoneNo());
         if (isUserAlreadyExist) {
             throw new ResourceAlreadyExists("Email or PhoneNumber already exist");
         }
 
-        User savedUser = userRepo.save(user);
+        User savedUser = masterRepo.getUserRepo().save(user); // saving a user
+
+        Account account = new Account(); // Create and associate account
+        account.setUser(savedUser);
+        Account savedAccount = masterRepo.getAccountRepo().save(account);
+
+
+        savedUser.setAccount(account);
+        masterRepo.getUserRepo().save(savedUser);
         return CommonResponse.OK(UserDTO.UserToUserDTO(savedUser));
     }
 
     @Override
     public ResponseModel loginUser(String email, String password) {
-        Optional<User> user = userRepo.findByEmail(email);
+        Optional<User> user = masterRepo.getUserRepo().findByEmail(email);
 
         if (user.isEmpty()) {
             throw new ResourceNotFound("user not found with email : " +email);
@@ -53,7 +64,7 @@ public class UserServiceIMPL implements UserService {
 
     @Override
     public ResponseModel updateUser(Long userId, UserDTO updatedUser) {
-        User prevUser = userRepo.findById(userId).orElseThrow(() -> new ResourceNotFound("User not found with id " + userId));
+        User prevUser = masterRepo.getUserRepo().findById(userId).orElseThrow(() -> new ResourceNotFound("User not found with id " + userId));
 
         if (updatedUser.getUsername() != null) prevUser.setUsername(updatedUser.getUsername());
         if (updatedUser.getPhoneNo() != null) prevUser.setPhoneNo(updatedUser.getPhoneNo());
@@ -74,7 +85,7 @@ public class UserServiceIMPL implements UserService {
             }
         }
 
-        User savedUser = userRepo.save(prevUser);
+        User savedUser = masterRepo.getUserRepo().save(prevUser);
         return CommonResponse.OK(UserDTO.UserToUserDTO(savedUser));
 
     }

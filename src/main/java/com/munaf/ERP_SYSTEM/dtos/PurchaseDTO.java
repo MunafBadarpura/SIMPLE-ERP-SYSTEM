@@ -3,9 +3,11 @@ package com.munaf.ERP_SYSTEM.dtos;
 import com.munaf.ERP_SYSTEM.entities.Product;
 import com.munaf.ERP_SYSTEM.entities.Purchase;
 import com.munaf.ERP_SYSTEM.entities.Supplier;
+import jakarta.validation.Valid;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -19,7 +21,7 @@ public class PurchaseDTO {
 
     private LocalDateTime purchaseDate;
 
-    private Supplier supplier;
+    private Long supplierId;
 
     private List<Product> products;
 
@@ -31,8 +33,9 @@ public class PurchaseDTO {
         purchaseDTO.setPurchaseAmount(purchase.getPurchaseAmount());
         purchaseDTO.setPurchaseQuantity(purchase.getPurchaseQuantity());
         purchaseDTO.setPurchaseDate(purchase.getPurchaseDate());
-        purchaseDTO.setSupplier(purchase.getSupplier());
+        purchaseDTO.setSupplierId(purchase.getSupplier().getId());
         purchaseDTO.setProducts(purchase.getProducts());
+
         return purchaseDTO;
     }
 

@@ -1,17 +1,16 @@
 package com.munaf.ERP_SYSTEM.services;
 
 import com.munaf.ERP_SYSTEM.dtos.ProductDTO;
-import com.munaf.ERP_SYSTEM.entities.Product;
+import com.munaf.ERP_SYSTEM.utils.PageResponseModel;
 import com.munaf.ERP_SYSTEM.utils.ResponseModel;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
 public interface PurchaseService {
 
-    ResponseModel purchaseProductFromSupplier(Long userId, Long supplierId, @RequestBody List<ProductDTO> productDTOS);
+    ResponseModel purchaseProductFromSupplier(Long userId, Long supplierId,List<ProductDTO> productDTOS);
 
-    ResponseModel getAllPurchases(Long userId);
+    PageResponseModel getAllPurchases(Long userId, Integer pageNo, String sortBy);
 
     ResponseModel getPurchaseWithId(Long userId, Long purchaseId);
 }
