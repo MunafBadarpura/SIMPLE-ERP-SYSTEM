@@ -28,7 +28,9 @@ public class Product {
 
     private Long productStock;
 
-    private Long productPrice;
+    private Long productPurchasePrice;
+
+    private Long productSalePrice;
 
     @CreatedDate
     private LocalDateTime createdAt;

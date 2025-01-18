@@ -26,9 +26,13 @@ public class ProductDTO {
     @Positive(message = "Product stock must be a positive number.")
     private Long productStock;
 
-    @NotNull(message = "Product price cannot be null.")
-    @Positive(message = "Product price must be a positive number.")
-    private Long productPrice;
+    @NotNull(message = "Product Purchase price cannot be null.")
+    @Positive(message = "Product Purchase price must be a positive number.")
+    private Long productPurchasePrice;
+
+    @NotNull(message = "Product Purchase price cannot be null.")
+    @Positive(message = "Product Purchase price must be a positive number.")
+    private Long productSalePrice;
 
     private LocalDateTime createdAt;
 
@@ -40,7 +44,8 @@ public class ProductDTO {
         product.setProductName(this.getProductName());
         product.setCategory(Category.valueOf(this.getCategory())); // product want enum and we send string
         product.setProductStock(this.getProductStock());
-        product.setProductPrice(this.getProductPrice());
+        product.setProductPurchasePrice(this.getProductPurchasePrice());
+        product.setProductSalePrice(this.getProductSalePrice());
         return product;
     }
 
@@ -50,7 +55,8 @@ public class ProductDTO {
         productDTO.setProductName(product.getProductName());
         productDTO.setCategory(product.getCategory().name()); // productDTO want string and product share enum
         productDTO.setProductStock(product.getProductStock());
-        productDTO.setProductPrice(product.getProductPrice());
+        productDTO.setProductPurchasePrice(product.getProductPurchasePrice());
+        productDTO.setProductSalePrice(product.getProductSalePrice());
         productDTO.setCreatedAt(product.getCreatedAt());
         productDTO.setUpdatedAt(product.getUpdatedAt());
 

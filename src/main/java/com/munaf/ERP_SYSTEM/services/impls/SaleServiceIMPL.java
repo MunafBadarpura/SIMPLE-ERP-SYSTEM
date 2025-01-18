@@ -67,7 +67,7 @@ public class SaleServiceIMPL implements SaleService {
         for (SaleProductDTO saleProductDTO : saleProductDTOS) {
             Product product = getProductWithId(saleProductDTO.getId(), userId);
 
-            totalSaleAmount += product.getProductPrice()*saleProductDTO.getProductQuantity();
+            totalSaleAmount += product.getProductSalePrice()*saleProductDTO.getProductQuantity();
             products.add(product);
             product.setProductStock(product.getProductStock() - saleProductDTO.getProductQuantity());
             masterRepo.getProductRepo().save(product);

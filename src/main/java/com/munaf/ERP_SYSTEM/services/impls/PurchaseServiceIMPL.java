@@ -75,7 +75,7 @@ public class PurchaseServiceIMPL implements PurchaseService {
             }
 
             // Update total price
-            totalPurchasePrice += productDTO.getProductPrice()*productDTO.getProductStock();
+            totalPurchasePrice += productDTO.getProductPurchasePrice()*productDTO.getProductStock();
         }
 
         // updating bank account
