@@ -4,6 +4,7 @@ import com.munaf.ERP_SYSTEM.dtos.ProductDTO;
 import com.munaf.ERP_SYSTEM.services.PurchaseService;
 import com.munaf.ERP_SYSTEM.utils.PageResponseModel;
 import com.munaf.ERP_SYSTEM.utils.ResponseModel;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("user/{userId}/purchase")
 @Validated
+@Tag(name = "PURCHASE APIs", description = "With the help of this APIs user can purchase products from supplier")
 public class PurchaseController {
 
     private final PurchaseService purchaseService;

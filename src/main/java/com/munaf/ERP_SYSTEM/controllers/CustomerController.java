@@ -4,11 +4,13 @@ import com.munaf.ERP_SYSTEM.dtos.CustomerDTO;
 import com.munaf.ERP_SYSTEM.services.CustomerService;
 import com.munaf.ERP_SYSTEM.utils.PageResponseModel;
 import com.munaf.ERP_SYSTEM.utils.ResponseModel;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/user/{userId}/customer")
+@Tag(name = "CUSTOMERS APIs", description = "With the help of this APIs user can add, update, remove customers and manage them")
 public class CustomerController {
 
     private final CustomerService customerService;

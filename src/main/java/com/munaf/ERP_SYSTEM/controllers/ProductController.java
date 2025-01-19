@@ -3,10 +3,12 @@ package com.munaf.ERP_SYSTEM.controllers;
 import com.munaf.ERP_SYSTEM.services.ProductService;
 import com.munaf.ERP_SYSTEM.utils.PageResponseModel;
 import com.munaf.ERP_SYSTEM.utils.ResponseModel;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("user/{userId}/product")
+@Tag(name = "PRODUCT APIs", description = "With the help of this APIs user can get see their products and track of stock, price etc")
 public class ProductController {
 
     private final ProductService productService;

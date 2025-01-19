@@ -4,6 +4,7 @@ import com.munaf.ERP_SYSTEM.dtos.SaleProductDTO;
 import com.munaf.ERP_SYSTEM.services.SaleService;
 import com.munaf.ERP_SYSTEM.utils.PageResponseModel;
 import com.munaf.ERP_SYSTEM.utils.ResponseModel;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("user/{userId}/sale")
 @Validated
+@Tag(name = "SALE APIs", description = "With the help of this APIs user can sale products to customers")
 public class SaleController {
 
     private final SaleService saleService;

@@ -4,11 +4,13 @@ import com.munaf.ERP_SYSTEM.dtos.SupplierDTO;
 import com.munaf.ERP_SYSTEM.services.SupplierService;
 import com.munaf.ERP_SYSTEM.utils.PageResponseModel;
 import com.munaf.ERP_SYSTEM.utils.ResponseModel;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/user/{userId}/supplier")
+@Tag(name = "SUPPLIER APIs", description = "With the help of this APIs user can add, update, remove supplier and manage them")
 public class SupplierController {
 
     private final SupplierService supplierService;
