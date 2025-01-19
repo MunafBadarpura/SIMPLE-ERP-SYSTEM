@@ -121,25 +121,3 @@ public class SaleServiceIMPL implements SaleService {
 
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-//User user = getUserWithId(userId);
-//Customer customer = getCustomerWithId(customerId);
-//
-//List<Product> products = productDTOS.stream()
-//        .map(productDTO -> {
-//            Product product = productDTO.productDtoToProduct();
-//
-//
-//        })
