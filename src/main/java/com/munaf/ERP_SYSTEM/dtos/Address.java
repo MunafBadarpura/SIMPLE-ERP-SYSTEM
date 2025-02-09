@@ -6,8 +6,11 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
+import java.io.Serializable;
+
+
 @Data
-public class Address {
+public class Address implements Serializable {
     @NotBlank(message = "area can not be blank")
     private String area;
     @NotBlank(message = "city can not be blank")

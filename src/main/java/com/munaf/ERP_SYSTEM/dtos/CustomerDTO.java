@@ -9,11 +9,12 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-public class CustomerDTO {
+public class CustomerDTO implements Serializable {
 
     private Long id;
 

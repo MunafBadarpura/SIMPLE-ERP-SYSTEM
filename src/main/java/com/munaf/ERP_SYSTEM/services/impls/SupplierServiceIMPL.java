@@ -11,6 +11,7 @@ import com.munaf.ERP_SYSTEM.utils.CommonPageResponse;
 import com.munaf.ERP_SYSTEM.utils.CommonResponse;
 import com.munaf.ERP_SYSTEM.utils.PageResponseModel;
 import com.munaf.ERP_SYSTEM.utils.ResponseModel;
+import org.springframework.cache.annotation.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @Service
+@CacheConfig(cacheNames = "supplier")
 public class SupplierServiceIMPL implements SupplierService {
 
     private final MasterRepo masterRepo;
@@ -35,6 +37,7 @@ public class SupplierServiceIMPL implements SupplierService {
     }
 
     @Override
+    @Cacheable(key = "#userId + '_' + #supplierId")
     public ResponseModel getSupplierById(Long userId, Long supplierId) {
         User user = getUserWithId(userId);
         Supplier supplier = masterRepo.getSupplierRepo().findByIdAndUserId(supplierId, userId)
@@ -43,6 +46,7 @@ public class SupplierServiceIMPL implements SupplierService {
     }
 
     @Override
+    @Cacheable(key = "#userId + '_' + #suppliers")
     public PageResponseModel getAllSuppliers(Long userId, Integer pageNo, String sortBy) {
         User user = getUserWithId(userId);
         Pageable pageable = PageRequest.of(pageNo - 1, 10, Sort.by(sortBy));
@@ -62,6 +66,9 @@ public class SupplierServiceIMPL implements SupplierService {
 
 
     @Override
+    @Caching(
+            evict = @CacheEvict(key = "#userId + '_' + #suppliers")
+    )
     public ResponseModel createSupplier(Long userId, SupplierDTO supplierDTO) {
         User user = getUserWithId(userId);
 
@@ -84,6 +91,7 @@ public class SupplierServiceIMPL implements SupplierService {
     }
 
     @Override
+    @CachePut(key = "#userId + '_' + #supplierId")
     public ResponseModel updateSupplier(Long userId, Long supplierId, SupplierDTO updatedSupplier) {
         User user = getUserWithId(userId);
         Supplier supplier = masterRepo.getSupplierRepo().findByIdAndUserId(supplierId, userId)
@@ -100,6 +108,7 @@ public class SupplierServiceIMPL implements SupplierService {
     }
 
     @Override
+    @CacheEvict(key = "#userId + '_' + #supplierId")
     public ResponseModel deleteSupplier(Long userId, Long supplierId) {
         User user = getUserWithId(userId);
         Supplier supplier = masterRepo.getSupplierRepo().findByIdAndUserId(supplierId, userId)

@@ -3,10 +3,11 @@ package com.munaf.ERP_SYSTEM.utils;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
-public class PageResponseModel {
+public class PageResponseModel implements Serializable {
 
     private LocalDateTime timestamp;
     private Object data;

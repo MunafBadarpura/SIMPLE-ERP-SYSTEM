@@ -5,12 +5,13 @@ import lombok.Data;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
 @Data
 @EntityListeners(AuditingEntityListener.class)
-public class Account {
+public class Account implements Serializable  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

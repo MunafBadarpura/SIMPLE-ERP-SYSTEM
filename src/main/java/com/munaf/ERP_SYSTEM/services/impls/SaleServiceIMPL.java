@@ -1,6 +1,5 @@
 package com.munaf.ERP_SYSTEM.services.impls;
 
-import com.munaf.ERP_SYSTEM.dtos.ProductDTO;
 import com.munaf.ERP_SYSTEM.dtos.SaleDTO;
 import com.munaf.ERP_SYSTEM.dtos.SaleProductDTO;
 import com.munaf.ERP_SYSTEM.entities.Customer;
@@ -14,6 +13,10 @@ import com.munaf.ERP_SYSTEM.utils.CommonPageResponse;
 import com.munaf.ERP_SYSTEM.utils.CommonResponse;
 import com.munaf.ERP_SYSTEM.utils.PageResponseModel;
 import com.munaf.ERP_SYSTEM.utils.ResponseModel;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @Service
+@CacheConfig(cacheNames = "sale")
 public class SaleServiceIMPL implements SaleService {
 
     private final MasterRepo masterRepo;
@@ -53,6 +57,12 @@ public class SaleServiceIMPL implements SaleService {
 
     @Override
     @Transactional
+    @Caching(
+            evict = {
+                    @CacheEvict(value = "sale", key = "#userId + '_' + #getAllSales"),
+                    @CacheEvict(value = "product", key = "#userId + '_' + #getAllProducts")
+            }
+    )
     public ResponseModel saleProductToCustomer(Long userId, Long customerId, List<SaleProductDTO> saleProductDTOS) {
         User user = getUserWithId(userId);
         Customer customer = getCustomerWithId(customerId);
@@ -92,6 +102,7 @@ public class SaleServiceIMPL implements SaleService {
 
 
     @Override
+    @Cacheable(key = "#userId + '_' + #getAllSales")
     public PageResponseModel getAllSales(Long userId, Integer pageNo, String sortBy) {
         User user = getUserWithId(userId);
         Pageable pageable = PageRequest.of(pageNo - 1, 10, Sort.by(sortBy));
@@ -111,6 +122,7 @@ public class SaleServiceIMPL implements SaleService {
 
 
     @Override
+    @Cacheable(key = "#userId + '_' + #saleId")
     public ResponseModel getSaleById(Long userId, Long saleId) {
         User user = getUserWithId(userId);
         Sale sale = masterRepo.getSaleRepo().findByIdAndUserId(saleId, userId)

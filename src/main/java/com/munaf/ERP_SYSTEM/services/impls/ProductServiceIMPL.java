@@ -10,6 +10,8 @@ import com.munaf.ERP_SYSTEM.utils.CommonPageResponse;
 import com.munaf.ERP_SYSTEM.utils.CommonResponse;
 import com.munaf.ERP_SYSTEM.utils.PageResponseModel;
 import com.munaf.ERP_SYSTEM.utils.ResponseModel;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +23,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@CacheConfig(cacheNames = "product")
 public class ProductServiceIMPL implements ProductService {
 
     private final MasterRepo masterRepo;
@@ -35,6 +38,7 @@ public class ProductServiceIMPL implements ProductService {
     }
 
     @Override
+    @Cacheable(key = "#userId + '_' + #getAllProducts")
     public PageResponseModel getAllProducts(Long userId, Integer pageNo, String sortBy) {
         isUserExistWithId(userId);
 
@@ -55,6 +59,7 @@ public class ProductServiceIMPL implements ProductService {
     }
 
     @Override
+    @Cacheable(key = "#userId + '_' + #productId")
     public ResponseModel getProductWithId(Long userId, Long productId) {
         isUserExistWithId(userId);
         Product product = masterRepo.getProductRepo().findByIdAndUserId(productId, userId)

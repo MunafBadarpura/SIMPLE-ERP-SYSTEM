@@ -3,10 +3,11 @@ package com.munaf.ERP_SYSTEM.dtos;
 import com.munaf.ERP_SYSTEM.entities.Account;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
-public class AccountDTO {
+public class AccountDTO implements Serializable {
 
     private Long id;
 

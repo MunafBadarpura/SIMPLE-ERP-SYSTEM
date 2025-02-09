@@ -11,10 +11,14 @@ import com.munaf.ERP_SYSTEM.repositories.MasterRepo;
 import com.munaf.ERP_SYSTEM.services.AccountService;
 import com.munaf.ERP_SYSTEM.utils.CommonResponse;
 import com.munaf.ERP_SYSTEM.utils.ResponseModel;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@CacheConfig(cacheNames = "account")
 public class AccountServiceIMPL implements AccountService {
 
     private final MasterRepo masterRepo;
@@ -30,6 +34,7 @@ public class AccountServiceIMPL implements AccountService {
 
 
     @Override
+    @CacheEvict(key = "#userId + '_' + #accountDetails")
     @Transactional
     public ResponseModel depositToAccount(Long userId, Long depositAmount) {
         User user = getUserWithId(userId);
@@ -50,6 +55,7 @@ public class AccountServiceIMPL implements AccountService {
     }
 
     @Override
+    @CacheEvict(key = "#userId + '_' + #accountDetails")
     @Transactional
     public ResponseModel withdrawFromAccount(Long userId, Long withdrawAmount) {
         User user = getUserWithId(userId);
@@ -74,6 +80,7 @@ public class AccountServiceIMPL implements AccountService {
     }
 
     @Override
+    @Cacheable(key = "#userId + '_' + #accountDetails")
     public ResponseModel getAccountDetails(Long userId) {
         User user = getUserWithId(userId);
         return CommonResponse.OK(AccountDTO.accountToAccountDTO(user.getAccount()));

@@ -5,10 +5,11 @@ import com.munaf.ERP_SYSTEM.entities.enums.Category;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
-public class ProductDTO {
+public class ProductDTO implements Serializable {
 
     private Long id;
 

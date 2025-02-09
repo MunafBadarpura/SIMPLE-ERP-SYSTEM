@@ -10,4 +10,5 @@ public interface UserService {
     ResponseModel loginUser(String email, String password);
 
     ResponseModel updateUser(Long userId, UserDTO updatedUser);
+
 }

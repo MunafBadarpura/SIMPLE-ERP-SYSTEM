@@ -13,6 +13,10 @@ import com.munaf.ERP_SYSTEM.utils.CommonPageResponse;
 import com.munaf.ERP_SYSTEM.utils.CommonResponse;
 import com.munaf.ERP_SYSTEM.utils.PageResponseModel;
 import com.munaf.ERP_SYSTEM.utils.ResponseModel;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @Service
+@CacheConfig(cacheNames = "purchase")
 public class PurchaseServiceIMPL implements PurchaseService {
 
     private final MasterRepo masterRepo;
@@ -49,6 +54,12 @@ public class PurchaseServiceIMPL implements PurchaseService {
 
     @Override
     @Transactional
+    @Caching(
+            evict = {
+                    @CacheEvict(value = "purchase", key = "#userId + '_' + #getAllPurchases"),
+                    @CacheEvict(value = "product", key = "#userId + '_' + #getAllProducts")
+            }
+    )
     public ResponseModel purchaseProductFromSupplier(Long userId, Long supplierId, List<ProductDTO> productDTOS) {
         User user = getUserWithId(userId);
         Supplier supplier = getSupplierWithId(supplierId, userId);
@@ -103,6 +114,7 @@ public class PurchaseServiceIMPL implements PurchaseService {
 
 
     @Override
+    @Cacheable(key = "#userId + '_' + #getAllPurchases")
     public PageResponseModel getAllPurchases(Long userId, Integer pageNo, String sortBy) {
         User user = getUserWithId(userId);
 
@@ -125,6 +137,7 @@ public class PurchaseServiceIMPL implements PurchaseService {
 
 
     @Override
+    @Cacheable(key = "#userId + '_' + #purchaseId")
     public ResponseModel getPurchaseWithId(Long userId, Long purchaseId) {
         User user = getUserWithId(userId);
         Purchase purchase = masterRepo.getPurchaseRepo().findByIdAndUserId(purchaseId,userId)

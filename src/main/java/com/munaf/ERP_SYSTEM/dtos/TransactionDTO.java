@@ -4,11 +4,12 @@ import com.munaf.ERP_SYSTEM.entities.Transaction;
 import com.munaf.ERP_SYSTEM.entities.enums.TransactionType;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
-public class TransactionDTO {
+public class TransactionDTO  implements Serializable {
 
     private Long id;
 

@@ -7,11 +7,12 @@ import com.munaf.ERP_SYSTEM.entities.User;
 import jakarta.validation.constraints.Positive;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-public class SaleDTO {
+public class SaleDTO implements Serializable {
 
     private Long id;
 

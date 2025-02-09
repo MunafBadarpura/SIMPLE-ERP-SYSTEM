@@ -6,13 +6,14 @@ import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
 @Data
 @EntityListeners(AuditingEntityListener.class)
-public class Transaction {
+public class Transaction implements Serializable  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -24,5 +24,7 @@ public class MasterRepo {
     private AccountRepo accountRepo;
     @Autowired
     private TransactionRepo transactionRepo;
+    @Autowired
+    private InvoiceRepo invoiceRepo;
 }
 

@@ -6,12 +6,13 @@ import com.munaf.ERP_SYSTEM.entities.Supplier;
 import jakarta.validation.Valid;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class PurchaseDTO {
+public class PurchaseDTO implements Serializable {
 
     private Long id;
 

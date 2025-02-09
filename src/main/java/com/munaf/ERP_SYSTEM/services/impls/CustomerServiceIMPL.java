@@ -11,6 +11,10 @@ import com.munaf.ERP_SYSTEM.utils.CommonPageResponse;
 import com.munaf.ERP_SYSTEM.utils.CommonResponse;
 import com.munaf.ERP_SYSTEM.utils.PageResponseModel;
 import com.munaf.ERP_SYSTEM.utils.ResponseModel;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -22,6 +26,7 @@ import java.util.List;
 
 
 @Service
+@CacheConfig(cacheNames = "customer")
 public class CustomerServiceIMPL implements CustomerService {
 
     private final MasterRepo masterRepo;
@@ -36,6 +41,7 @@ public class CustomerServiceIMPL implements CustomerService {
     }
 
     @Override
+    @Cacheable(key = "#userId + '_' + #customerId")
     public ResponseModel getCustomerById(Long userId, Long customerId) {
         User user = getUserWithId(userId);
         Customer customer = masterRepo.getCustomerRepo().findByIdAndUserId(customerId, userId).orElseThrow(() -> new ResourceNotFound("Customer Not Exists"));
@@ -43,6 +49,7 @@ public class CustomerServiceIMPL implements CustomerService {
     }
 
     @Override
+    @Cacheable(key = "#userId + '_' + #customers")
     public PageResponseModel getAllCustomer(Long userId, Integer pageNo, String sortBy) {
         User user = getUserWithId(userId);
         Pageable pageable = PageRequest.of(pageNo-1,10, Sort.by(sortBy));
@@ -64,6 +71,7 @@ public class CustomerServiceIMPL implements CustomerService {
     }
 
     @Override
+    @CacheEvict(key = "#userId + '_' + #customers")
     public ResponseModel createCustomer(Long userId, CustomerDTO customerDTO) {
         User user = getUserWithId(userId);
 
@@ -86,6 +94,7 @@ public class CustomerServiceIMPL implements CustomerService {
     }
 
     @Override
+    @CachePut(key = "#userId + '_' + #customerId")
     public ResponseModel updateCustomer(Long userId, Long customerId, CustomerDTO updatedCustomer) {
         User user = getUserWithId(userId);
         Customer customer = masterRepo.getCustomerRepo().findByIdAndUserId(customerId, userId).orElseThrow(() -> new ResourceNotFound("Customer Not Exists"));
@@ -102,6 +111,7 @@ public class CustomerServiceIMPL implements CustomerService {
     }
 
     @Override
+    @CacheEvict(key = "#userId + '_' + #customerId")
     public ResponseModel deleteCustomer(Long userId, Long customerId) {
         User user = getUserWithId(userId);
         Customer customer = masterRepo.getCustomerRepo().findByIdAndUserId(customerId, userId).orElseThrow(() -> new ResourceNotFound("Customer Not Exists"));
