@@ -1,14 +1,14 @@
 package com.munaf.ERP_SYSTEM.controllers;
 
 import com.munaf.ERP_SYSTEM.dtos.UserDTO;
-import com.munaf.ERP_SYSTEM.entities.User;
 import com.munaf.ERP_SYSTEM.services.UserService;
 import com.munaf.ERP_SYSTEM.utils.ResponseModel;
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
-import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
+
 
 @RestController
 @RequestMapping("user")
@@ -29,8 +29,16 @@ public class UserController {
 
     // login
     @PostMapping("/login")
-    public ResponseModel loginUser(@RequestParam String email, @RequestParam String password){
-        return userService.loginUser(email,password);
+    public ResponseModel loginUser(@RequestParam String email, @RequestParam String password, HttpServletResponse httpServletResponse){
+        ResponseModel responseModel = userService.loginUser(email,password);
+        String jwtToken = responseModel.getData().toString();
+
+        Cookie cookie = new Cookie("jwtToken", jwtToken);
+        cookie.setHttpOnly(true);
+        httpServletResponse.addCookie(cookie);
+
+        return responseModel;
+
     }
 
     // update

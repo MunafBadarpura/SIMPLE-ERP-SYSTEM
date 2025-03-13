@@ -11,4 +11,5 @@ public interface UserService {
 
     ResponseModel updateUser(Long userId, UserDTO updatedUser);
 
+    User getUserById(Long userId);
 }

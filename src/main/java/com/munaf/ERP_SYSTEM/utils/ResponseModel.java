@@ -19,7 +19,7 @@ public class ResponseModel implements Serializable {
     }
 
     public ResponseModel(Object data, Object error, HttpStatus status) {
-        this();
+        this.timestamp = LocalDateTime.now();
         this.data = data;
         this.error = error;
         this.status = status;
